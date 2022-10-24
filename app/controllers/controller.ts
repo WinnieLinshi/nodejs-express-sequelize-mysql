@@ -10,21 +10,32 @@ const businessHour = db.businessHour;
 
 const Op = db.Sequelize.Op;
 const moment = require('moment');
+const businessFile = require('../config/1.json');
+const userFile = require('../config/2.json');
 
 // Create and Save a new business
-exports.businessEtl = (req: { body: any[]; }, res: { send: () => void; status: (arg0: number) => { (): any; new(): any; send: { (arg0: { message: any; }): void; new(): any; }; }; }) => {
+exports.businessEtl = (req: any, res: any) => {
   // Create a business
-  const businesss = req.body.map((business) => ({
+  let businessId = 1
+
+  const businesss = businessFile.map((business: { cashBalance: any; restaurantName: any; }) => ({
+    id:businessId++,
     cashBalance: business.cashBalance,
     restaurantName: business.restaurantName,
   }));
+
+  // Save business in the database
+  business.bulkCreate(businesss).then((data: any) => {
+    res.send(data);
+  })
+
   const dayOfWeek: Record<string, number> = { Mon: 1, Tues: 2, Wed: 3, Weds: 3, Thu: 4, Thurs: 4, Fri: 5, Sat: 6, Sun: 7 }
   const toMinutes = (time: string) => moment.duration(moment(time, ['h:mm A']).format('HH:mm')).asMinutes()
   var businessHours: { businessId: number; day: any; openTime: number; closeTime: number; }[] = []
-  let businessId = 1
+  let id = 1
 
 
-  req.body.forEach((business) => {
+  businessFile.forEach((business: { openingHours: string; }) => {
     business.openingHours.split('/').forEach((date: string) => {
       const days = [...date.matchAll(/[A-Z][a-z]+/g)].map((i) => i[0])
       const timeRange = [...date.matchAll(/\d+(:\d+)?\s*(am|pm)?/g)].map((i) => i[0])
@@ -34,19 +45,21 @@ exports.businessEtl = (req: { body: any[]; }, res: { send: () => void; status: (
         const closingHour = toMinutes(timeRange[1])
 
         businessHours.push({
-          businessId: businessId,
+          businessId: id,
           day: dayOfWeek[day],
           openTime: openingHour,
           closeTime: closingHour,
         })
       })
     })
-    businessId++;
+    id++;
   })
+
+  businessHour.bulkCreate(businessHours);
 
   let i = 1;
   var menus: { businessId: number; dishName: any; price: any; }[] = [];
-  req.body.forEach((business) => {
+  businessFile.forEach((business: { menu: { dishName: any; price: any; }[]; }) => {
     business.menu.forEach((element: { dishName: any; price: any; }) => {
       menus.push({
         businessId: i,
@@ -56,10 +69,7 @@ exports.businessEtl = (req: { body: any[]; }, res: { send: () => void; status: (
     });
     i++;
   });
-
-  // Save business in the database
-  business.bulkCreate(businesss);
-  businessHour.bulkCreate(businessHours);
+  
   menu.bulkCreate(menus).then((data: any) => {
     res.send();
   })
@@ -71,16 +81,16 @@ exports.businessEtl = (req: { body: any[]; }, res: { send: () => void; status: (
 };
 
 // Create and Save a few users
-exports.userEtl = (req: { body: any[]; }, res: { send: () => any; status: (arg0: number) => { (): any; new(): any; send: { (arg0: { message: any; }): void; new(): any; }; }; }) => {
+exports.userEtl = (req: any, res: any) => {
   // Create a few users
-  const users = req.body.map((user: { cashBalance: any; name: any; id: any; }) => ({
+  const users = userFile.map((user: { cashBalance: any; name: any; id: any; }) => ({
     cashBalance: user.cashBalance,
     userName: user.name,
     userId: user.id
   }));
 
   var purchaseHistorys: { userId: any; dishName: any; restaurantName: any; transactionAmount: any; transactionDate: any; }[] = []
-  req.body.forEach((user: { purchaseHistory: any[]; id: any; }) => {
+  userFile.forEach((user: { purchaseHistory: any[]; id: any; }) => {
     user.purchaseHistory.forEach((element: { dishName: any; restaurantName: any; transactionAmount: any; transactionDate: string | number | Date; }) => {
       purchaseHistorys.push({
         userId: user.id,
@@ -133,7 +143,7 @@ exports.findRestByDishNumInPrice = (req: any, res: any) => {
   const dishNum = req.query.dishNum
   business.findAll({
     having: Sequelize.literal('dishNum ' + dishCompare + dishNum),
-    attributes:  {
+    attributes: {
       include: [
         [sequelize.fn("COUNT", "1"), 'dishNum']
       ]
@@ -181,7 +191,7 @@ exports.purchaseDish = async (req: any, res: any) => {
     } else {
       purchaseHistory.create(purchaseDetails, { transaction: t })
       await user.update({ cashBalance: userInfo.cashBalance - req.body.transactionAmount }, { where: { userId: userInfo.userId } }, { transaction: t }).then((data: any) => {
-        res.send({status:data[0]===1?"success":"fail"});
+        res.send({ status: data[0] === 1 ? "success" : "fail" });
       });
     }
   });
