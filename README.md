@@ -63,6 +63,7 @@ This is a simple Food Delivery Platform that implements a reusable REST API for 
 ## :gear:Getting Started
 
 There are many ways on setting up this project locally, but the easiest and most recommended way is to use demo website
+
 ** use [the demo](https://nodejs-sequelize-mysql1.herokuapp.com/docs/) :triangular_flag_on_post: directly**
 
 
@@ -103,22 +104,26 @@ Process a user purchasing a dish from a restaurant, handling all relevant data c
 |--------------|--------------|--------------|
 | 1 |  4987.51 | DANTE |
 
-### ACCOUNT
- USER_ID:old_key: | IBAN  :old_key:            |
----------|----------------------------|
-| winnie  | CH93-0000-0000-0000-0000-0 |
-| winnie  | CH93-0000-0000-0000-0000-1 |
-| winnie  | CH93-0000-0000-0000-0000-2 |
-| lily    | CH93-0000-0000-0000-0000-3 |
-| lily  | CH93-0000-0000-0000-0000-4 |
+### BUSINESS_HOURS
+| ID:old_key: | businessId | day | openTime | closeTime |
+|---------|--------------|--------|--------|--------|
+| 14  | 1 | 7 | 870 | 1200 |
 
-### USER
-USER_ID:old_key: | PASSWORD |
----------|----------|
-| winnie  | $2a$10$vVMom6S/OlDVjTQHTEoi3.5t00JLD/nsSqroEM1gMJ4wp40I4L3de | 
-| lily  | $2a$10$cKvWBwka9DTYMMmbM3gR..psmiflcI9tQA37dwnM/kaipPv5ig.zS |
+### PURCHASE_HISTORIES
+| ID:old_key: | businessId | dishName | price |
+|---------|--------------|--------|-------|
+| 4  | 1 | Zio Cecio | 10 |
 
-The 2 User's password clear code is "password"
+### MENUS
+| ID:old_key: | userID | dishName | restaurantName | transactionAmount |
+|---------|--------------|--------|--------|--------|
+| 4  | 1 | Zio Cecio | DANTE | 10 |
+
+### USER_INFOS
+userID:old_key: | UserName | cashBalance |
+---------|----------|------|
+| 0  | Edith Johnson | 700.7 |
+
 <!-- CONTACT -->
 ## :iphone:	Contact
 
