@@ -50,10 +50,10 @@ This is a simple Food Delivery Platform that implements a reusable REST API for 
 <p align="right"><a href="#readme-top"><img src="https://cdn-icons-png.flaticon.com/512/833/833408.png" alt="back" width="40" height="40"></a></p>
 
 ### :pick:Built With 
-[![nodejs][nodejs]]
-[![typeScript][typeScript]]
-[![express][express]]
-[![mysql][mysql]]
+![nodejs][nodejs]
+![typeScript][typeScript]
+![express][express]
+![mysql][mysql]
 
 <p align="right"><a href="#readme-top"><img src="https://cdn-icons-png.flaticon.com/512/833/833408.png" alt="back" width="40" height="40"></a></p>
 
@@ -131,7 +131,7 @@ userID:old_key: | UserName | cashBalance |
  **Winnie Lin** - [linw2949@gmail.com](mailto:linw2949@gmail.com)
 
 
-<p align="right"><a href="#readme-top"><img src="images/back.png" alt="back" width="40" height="40"></a></p>
+<p align="right"><a href="#readme-top"><img src="https://cdn-icons-png.flaticon.com/512/833/833408.png" alt="back" width="40" height="40"></a></p>
 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/winnielin2949/
